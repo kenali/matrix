@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
-
+import React, { createContext, useContext, useState } from "react";
 
 export type Cell = { id: number; amount: number };
 
@@ -14,7 +13,9 @@ interface MatrixContextType {
 
 const MatrixContext = createContext<MatrixContextType | undefined>(undefined);
 
-export const MatrixProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const MatrixProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [matrix, setMatrix] = useState<Cell[][]>([]);
   const [X, setX] = useState(0);
 
@@ -30,7 +31,8 @@ export const MatrixProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const incrementCell = (rIdx: number, cIdx: number) => {
-    const updated = [...matrix];
+    if (!matrix[rIdx] || !matrix[rIdx][cIdx]) return;
+    const updated = [...matrix.map((row) => [...row])];
     updated[rIdx][cIdx].amount += 1;
     setMatrix(updated);
   };
@@ -43,21 +45,26 @@ export const MatrixProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const n = matrix[0]?.length || 0;
     const newRow = Array.from({ length: n }, () => ({
       id: Math.random(),
-      amount: Math.floor(Math.random() * 900) + 100,
+      amount: generateAmount(),
     }));
     setMatrix([...matrix, newRow]);
   };
 
   return (
-    <MatrixContext.Provider value={{ matrix, X, setInitialData, incrementCell, removeRow, addRow }}>
+    <MatrixContext.Provider
+      value={{ matrix, X, setInitialData, incrementCell, removeRow, addRow }}
+    >
       {children}
     </MatrixContext.Provider>
   );
 };
-
 
 export const useMatrix = () => {
   const context = useContext(MatrixContext);
   if (!context) throw new Error("useMatrix must be used within MatrixProvider");
   return context;
 };
+
+function generateAmount(): any {
+  throw new Error("Function not implemented.");
+}

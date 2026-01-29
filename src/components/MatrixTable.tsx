@@ -39,7 +39,7 @@ export const MatrixTable = () => {
 
             return (
               <tr key={rIdx}>
-                {row.map((cell) => {
+                {row.map((cell,cIdx) => {
                   const isHeat = hoveredSumRowIdx === rIdx;
                   const isNearest = nearestIds.includes(cell.id);
                   const alpha = cell.amount / maxVal;
@@ -48,7 +48,7 @@ export const MatrixTable = () => {
                     <td
                       key={cell.id}
                       className={isNearest ? 'highlight-nearest' : ''}
-                      onClick={() => incrementCell(rIdx, matrix[0].indexOf(cell))}
+                      onClick={() => incrementCell(rIdx, cIdx)}
                       onMouseEnter={() => setHoveredCellId(cell.id)}
                       onMouseLeave={() => setHoveredCellId(null)}
                       style={{ 
